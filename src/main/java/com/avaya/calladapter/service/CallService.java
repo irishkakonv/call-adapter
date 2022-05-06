@@ -1,6 +1,6 @@
 package com.avaya.calladapter.service;
 
-import com.avaya.calladapter.model.Call;
+import org.openapitools.model.Call;
 
 public interface CallService {
 
