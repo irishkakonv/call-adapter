@@ -17,9 +17,8 @@ public class CallServiceImpl implements CallService {
 
     @Override
     public void createCall(final Call call) {
-//        Runnable createCall = () -> kafkaProducer.sendCreatedCall(call);
-//        CompletableFuture.runAsync(createCall);
-        kafkaProducer.sendCreatedCall(call);
+        Runnable createCall = () -> kafkaProducer.sendCreatedCall(call);
+        CompletableFuture.runAsync(createCall);
     }
 
     @Override
