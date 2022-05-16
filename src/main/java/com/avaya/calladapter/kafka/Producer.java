@@ -31,15 +31,7 @@ public class Producer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendCreatedCall(Call call) {
-        send(createKafkaCreatedCall(call));
-    }
-
-    public void sendDeletedCall(String callId) {
-        send(createKafkaDeleteCall(callId));
-    }
-
-    private void send(GenericRecord message) {
+    public void send(GenericRecord message) {
         ListenableFuture<SendResult<String, GenericRecord>> future = kafkaTemplate.send(kafkaTopic, message);
 
         future.addCallback(new ListenableFutureCallback<SendResult<String, GenericRecord>>() {
@@ -54,24 +46,5 @@ public class Producer {
                 LOGGER.info("Unable to send message=[{}] due to : {}", message, ex.getMessage());
             }
         });
-    }
-
-    private KafkaParticipant createKafkaParticipant(Participant participant) {
-        return KafkaParticipant.newBuilder().setId(participant.getId()).setName(participant.getName()).build();
-    }
-
-    private KafkaCreateCall createKafkaCreatedCall(Call call) {
-        return KafkaCreateCall.newBuilder()
-            .setId(call.getId())
-            .setCallerNumber(call.getCallerNumber())
-            .setCalledNumber(call.getCalledNumber())
-            .setEngagementDialogId(call.getEngagementDialogId())
-            .setParticipant(createKafkaParticipant(call.getParticipant()))
-            .setTimestamp(call.getTimestamp().toInstant())
-            .build();
-    }
-
-    private KafkaDeleteCall createKafkaDeleteCall(String callId) {
-        return KafkaDeleteCall.newBuilder().setId(callId).build();
     }
 }
