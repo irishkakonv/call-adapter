@@ -4,8 +4,8 @@ import org.openapitools.model.Call;
 
 public interface CallService {
 
-    String createCall(Call call);
+    void createCall(Call call);
 
-    String deleteCall(String callId);
+    void deleteCall(String callId);
 
 }

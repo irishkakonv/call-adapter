@@ -15,19 +15,22 @@ public class CallController extends V1ApiController {
 
     private final CallService callService;
 
-    public CallController(@Autowired(required = false) final V1ApiDelegate delegate,
-        final CallService callService) {
+    public CallController(
+        @Autowired(required = false) final V1ApiDelegate delegate, final CallService callService
+    ) {
         super(delegate);
         this.callService = callService;
     }
 
     @Override
     public ResponseEntity<String> createCall(final Call call) {
-        return ResponseEntity.ok(callService.createCall(call));
+        callService.createCall(call);
+        return ResponseEntity.ok().build();
     }
 
     @Override
     public ResponseEntity<String> deleteCall(final String callId) {
-        return ResponseEntity.ok(callService.deleteCall(callId));
+        callService.deleteCall(callId);
+        return ResponseEntity.ok().build();
     }
 }

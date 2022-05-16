@@ -1,18 +1,30 @@
 package com.avaya.calladapter.service;
 
+import com.avaya.calladapter.kafka.Producer;
 import org.openapitools.model.Call;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class CallServiceImpl implements CallService {
 
-    @Override
-    public String createCall(final Call call) {
-        return null;
+    private Producer kafkaProducer;
+
+    public CallServiceImpl(final Producer kafkaProducer) {
+        this.kafkaProducer = kafkaProducer;
     }
 
     @Override
-    public String deleteCall(final String callId) {
-        return null;
+    public void createCall(final Call call) {
+//        Runnable createCall = () -> kafkaProducer.sendCreatedCall(call);
+//        CompletableFuture.runAsync(createCall);
+        kafkaProducer.sendCreatedCall(call);
+    }
+
+    @Override
+    public void deleteCall(final String callId) {
+        Runnable deleteCall = () -> kafkaProducer.sendDeletedCall(callId);
+        CompletableFuture.runAsync(deleteCall);
     }
 }

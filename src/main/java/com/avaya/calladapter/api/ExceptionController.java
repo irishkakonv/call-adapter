@@ -31,9 +31,9 @@ public class ExceptionController {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     protected ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
 
-        ErrorResponse errorResponse =createErrorResponse();
+        ErrorResponse errorResponse = createErrorResponse();
         FieldError fieldError = ex.getBindingResult().getFieldErrors().iterator().next();
-        errorResponse.message(fieldError.getField() + " " +fieldError.getDefaultMessage());
+        errorResponse.message(fieldError.getField() + " " + fieldError.getDefaultMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
