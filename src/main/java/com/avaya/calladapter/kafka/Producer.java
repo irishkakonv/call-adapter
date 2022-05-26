@@ -32,7 +32,7 @@ public class Producer {
     }
 
     public void send(GenericRecord message) {
-        ListenableFuture<SendResult<String, GenericRecord>> future = kafkaTemplate.send(kafkaTopic, message);
+        ListenableFuture<SendResult<String, GenericRecord>> future = kafkaTemplate.send(kafkaTopic, "id", message);
 
         future.addCallback(new ListenableFutureCallback<SendResult<String, GenericRecord>>() {
 
