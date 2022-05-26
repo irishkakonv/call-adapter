@@ -1,0 +1,20 @@
+#apiVersion: networking.istio.io/v1alpha3
+#kind: VirtualService
+#metadata:
+#  name: {{ .Release.Name }}-virtualservice
+#spec:
+#  hosts:
+#  - "*"
+#  gateways:
+#  - default/default-ingressgateway
+#  http:
+#  - match:
+#    - uri:
+#        prefix: "app.example.com"
+#    rewrite:
+#      uri: "/"
+#    route:
+#    - destination:
+#        host: {{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local
+#        port:
+#          number: {{ .Values.container.port }}

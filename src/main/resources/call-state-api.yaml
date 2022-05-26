@@ -47,7 +47,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  "/v1/calls/{callId}":
+  "/v1/calls/{callId}:delete":
     post:
       tags:
         - Call state
