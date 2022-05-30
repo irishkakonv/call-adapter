@@ -180,7 +180,8 @@
                             </supportingFilesToGenerate>
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
-                                <delegatePattern>true</delegatePattern>
+                                <delegatePattern>false</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
                             </configOptions>
                         </configuration>
                     </execution>

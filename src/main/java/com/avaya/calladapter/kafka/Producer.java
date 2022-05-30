@@ -1,12 +1,6 @@
 package com.avaya.calladapter.kafka;
 
-import com.avaya.calladapter.KafkaCreateCall;
-import com.avaya.calladapter.KafkaDeleteCall;
-import com.avaya.calladapter.KafkaParticipant;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.openapitools.model.Call;
-import org.openapitools.model.Participant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +17,18 @@ public class Producer {
 
     private String kafkaTopic;
     private KafkaTemplate<String, GenericRecord> kafkaTemplate;
+    private ListenableFutureCallback listenableFutureCallback = new ListenableFutureCallback<SendResult<String, GenericRecord>>() {
+
+        @Override
+        public void onFailure(final Throwable ex) {
+            LOGGER.info("Unable to send message due to : {}", ex.getMessage());
+        }
+
+        @Override
+        public void onSuccess(SendResult<String, GenericRecord> result) {
+            LOGGER.info("Sent message with offset=[{}]", result.getRecordMetadata().offset());
+        }
+    };
 
     public Producer(
         @Value("${kafka.topic}") String kafkaTopic, final KafkaTemplate<String, GenericRecord> kafkaTemplate
@@ -32,19 +38,8 @@ public class Producer {
     }
 
     public void send(GenericRecord message) {
+        LOGGER.info("Sending message[{}]", message);
         ListenableFuture<SendResult<String, GenericRecord>> future = kafkaTemplate.send(kafkaTopic, "id", message);
-
-        future.addCallback(new ListenableFutureCallback<SendResult<String, GenericRecord>>() {
-
-            @Override
-            public void onSuccess(SendResult<String, GenericRecord> result) {
-                LOGGER.info("Sent message=[{}] with offset=[{}]", message, result.getRecordMetadata().offset());
-            }
-
-            @Override
-            public void onFailure(Throwable ex) {
-                LOGGER.info("Unable to send message=[{}] due to : {}", message, ex.getMessage());
-            }
-        });
+        future.addCallback(listenableFutureCallback);
     }
 }
